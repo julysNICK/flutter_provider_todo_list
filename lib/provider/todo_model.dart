@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_provider_todo_list/task_model.dart';
+import 'package:flutter_provider_todo_list/provider/task_model.dart';
 
 class TodoModel extends ChangeNotifier {
   List<TaskModel> tasks = [];

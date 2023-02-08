@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_provider_todo_list/task_model.dart';
-import 'package:flutter_provider_todo_list/todo_model.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_provider_todo_list/bloc/bloc.dart';
+import 'package:flutter_provider_todo_list/provider/task_model.dart';
+import 'package:flutter_provider_todo_list/bloc/todo_event.dart';
 
 class MyPopup extends StatelessWidget {
   const MyPopup({super.key});
@@ -16,7 +17,7 @@ class MyPopup extends StatelessWidget {
         title: titleController.text,
         detail: detailController.text,
       );
-      Provider.of<TodoModel>(contextHere, listen: false).insertTask(task);
+      BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
     }
 
     return AlertDialog(
