@@ -1,15 +1,14 @@
+//-------------------------------------------------
 import 'package:flutter/material.dart';
-import 'package:flutter_provider_todo_list/bloc/bloc.dart';
-import 'package:flutter_provider_todo_list/bloc/todo_state.dart';
 import 'package:flutter_provider_todo_list/provider/popup_todo.dart';
+import 'package:flutter_provider_todo_list/provider/todo_model.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_provider_todo_list/bloc/todo_event.dart';
 
 void main() {
   runApp(
-    BlocProvider<TaskBloc>(
-      create: (context) => TaskBloc(),
+    ChangeNotifierProvider<TodoModel>(
+      create: (context) => TodoModel(),
       child: const MyApp(),
     ),
   );
@@ -48,7 +47,7 @@ class MyHomePage extends StatelessWidget {
         title: titleController.text,
         detail: detailController.text,
       );
-      BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+      Provider.of<TodoModel>(contextHere, listen: false).addTaskInitList();
     }
 
     return Scaffold(
@@ -89,10 +88,10 @@ class MyHomePage extends StatelessWidget {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: BlocBuilder<TaskBloc, TodoState>(
-                  builder: (context, state) {
+                child: Consumer<TodoModel>(
+                  builder: (context, todo, child) {
                     return ListView.builder(
-                      itemCount: state.tasks.length,
+                      itemCount: todo.tasks.length,
                       itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(
@@ -100,14 +99,14 @@ class MyHomePage extends StatelessWidget {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(10),
                             title: Text(
-                              state.tasks[index].title,
+                              todo.tasks[index].title,
                               style: const TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             subtitle: Text(
-                              state.tasks[index].detail,
+                              todo.tasks[index].detail,
                               style: const TextStyle(
                                 color: Colors.black54,
                               ),
