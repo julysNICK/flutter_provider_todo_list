@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_provider_todo_list/bloc/bloc.dart';
+import 'package:flutter_provider_todo_list/bloc/todo_state.dart';
 import 'package:flutter_provider_todo_list/provider/popup_todo.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_provider_todo_list/bloc/todo_event.dart';
-import 'package:flutter_provider_todo_list/scopedModel/scopedModel.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 void main() {
   runApp(
-    ScopedModel<TodoScoped>(
-      model: TodoScoped(),
+    BlocProvider<TaskBloc>(
+      create: (context) => TaskBloc(),
       child: const MyApp(),
     ),
   );
@@ -90,10 +89,10 @@ class MyHomePage extends StatelessWidget {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: ScopedModelDescendant<TodoScoped>(
-                  builder: (context, state, model) {
+                child: BlocBuilder<TaskBloc, TodoState>(
+                  builder: (context, state) {
                     return ListView.builder(
-                      itemCount: model.length,
+                      itemCount: state.tasks.length,
                       itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(
@@ -101,14 +100,14 @@ class MyHomePage extends StatelessWidget {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(10),
                             title: Text(
-                              model.todos[index].title,
+                              state.tasks[index].title,
                               style: const TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             subtitle: Text(
-                              model.todos[index].detail,
+                              state.tasks[index].detail,
                               style: const TextStyle(
                                 color: Colors.black54,
                               ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_provider_todo_list/bloc/bloc.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
-import 'package:flutter_provider_todo_list/bloc/todo_event.dart';
+import 'package:flutter_provider_todo_list/scopedModel/scopedModel.dart';
+import 'package:flutter_provider_todo_list/scopedModel/todo_model.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class MyPopup extends StatelessWidget {
   const MyPopup({super.key});
@@ -17,7 +17,16 @@ class MyPopup extends StatelessWidget {
         title: titleController.text,
         detail: detailController.text,
       );
-      BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+      // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+    }
+
+    addTaskScoped(contextHere) {
+      TodoModel task = TodoModel(
+        title: titleController.text,
+        detail: detailController.text,
+      );
+      // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+      ScopedModel.of<TodoScoped>(contextHere).add(task);
     }
 
     return AlertDialog(
@@ -51,7 +60,7 @@ class MyPopup extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            addTask(context);
+            addTaskScoped(context);
             // Navigator.pop(context);
           },
           child: const Text("Add"),
