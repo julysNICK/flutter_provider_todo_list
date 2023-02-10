@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_provider_todo_list/mobx/task_store_redux.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
 import 'package:flutter_provider_todo_list/redux/actions_redux.dart';
 import 'package:flutter_provider_todo_list/scopedModel/scopedModel.dart';
 import 'package:flutter_provider_todo_list/scopedModel/todo_model.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class MyPopup extends StatelessWidget {
@@ -20,6 +22,15 @@ class MyPopup extends StatelessWidget {
         detail: detailController.text,
       );
       // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+    }
+
+    addTaskMobx(contextHere) {
+      TaskModel task = TaskModel(
+        title: titleController.text,
+        detail: detailController.text,
+      );
+      // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+      Provider.of<TaskStoreMobx>(context, listen: false).addTask(task);
     }
 
     addTaskScoped(contextHere) {
@@ -65,7 +76,7 @@ class MyPopup extends StatelessWidget {
         TextButton(
           child: const Text('Add'),
           onPressed: () {
-            addTaskRedux(context);
+            addTaskMobx(context);
           },
         ),
         TextButton(
