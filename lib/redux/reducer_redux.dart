@@ -1,11 +1,11 @@
+import 'package:flutter_provider_todo_list/provider/task_model.dart';
 import 'package:flutter_provider_todo_list/redux/actions_redux.dart';
-import 'package:flutter_provider_todo_list/redux/state_redux.dart';
 
-AppStateTodo todoReducer(AppStateTodo state, action) {
+List<TaskModel> todoReducer(List<TaskModel> state, action) {
   if (action == ActionsTodo.add) {
-    return AppStateTodo(tasks: [...state.tasks, action.task]);
+    return List.from(state)..add(action.task);
   } else if (action == ActionsTodo.remove) {
-    return AppStateTodo(tasks: [...state.tasks]..removeAt(action.index));
+    return List.from(state)..remove(action.task);
   }
   return state;
 }

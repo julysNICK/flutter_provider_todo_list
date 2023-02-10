@@ -38,6 +38,7 @@ dependencies:
   provider: ^6.0.5
   flutter_bloc: ^8.1.2
   scoped_model: ^2.0.0
+  flutter_redux: ^0.10.0
 
 dev_dependencies:
   flutter_test:

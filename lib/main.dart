@@ -4,13 +4,18 @@ import 'package:flutter_provider_todo_list/provider/popup_todo.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_provider_todo_list/bloc/todo_event.dart';
-import 'package:flutter_provider_todo_list/scopedModel/scopedModel.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_provider_todo_list/redux/reducer_redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 void main() {
+  final Store<List<TaskModel>> store = Store<List<TaskModel>>(
+    todoReducer,
+    initialState: [],
+  );
   runApp(
-    ScopedModel<TodoScoped>(
-      model: TodoScoped(),
+    StoreProvider(
+      store: store,
       child: const MyApp(),
     ),
   );
@@ -90,10 +95,11 @@ class MyHomePage extends StatelessWidget {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: ScopedModelDescendant<TodoScoped>(
-                  builder: (context, state, model) {
+                child: StoreConnector<List<TaskModel>, List<TaskModel>>(
+                  converter: (store) => store.state,
+                  builder: (context, todo) {
                     return ListView.builder(
-                      itemCount: model.length,
+                      itemCount: todo.length,
                       itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(
@@ -101,14 +107,14 @@ class MyHomePage extends StatelessWidget {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(10),
                             title: Text(
-                              model.todos[index].title,
+                              todo[index].title,
                               style: const TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             subtitle: Text(
-                              model.todos[index].detail,
+                              todo[index].detail,
                               style: const TextStyle(
                                 color: Colors.black54,
                               ),
