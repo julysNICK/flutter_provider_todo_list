@@ -1,0 +1,1 @@
+enum ActionsTodo { add, remove }
