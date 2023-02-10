@@ -41,45 +41,40 @@ class MyPopup extends StatelessWidget {
           .dispatch(AddTodoActions(task));
     }
 
-    return StoreConnector<List<TaskModel>, List<TaskModel>>(
-      converter: (store) => store.state,
-      builder: (context, tasks) {
-        return AlertDialog(
-          title: const Text('Add Task'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                    hintText: 'Title',
-                  ),
-                ),
-                TextField(
-                  controller: detailController,
-                  decoration: const InputDecoration(
-                    hintText: 'Detail',
-                  ),
-                ),
-              ],
+    return AlertDialog(
+      title: const Text('Add Task'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                hintText: 'Title',
+              ),
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Add'),
-              onPressed: () {
-                addTaskRedux(context);
-              },
+            TextField(
+              controller: detailController,
+              decoration: const InputDecoration(
+                hintText: 'Detail',
+              ),
             ),
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
           ],
-        );
-      },
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Add'),
+          onPressed: () {
+            addTaskRedux(context);
+          },
+        ),
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
     );
   }
 }
