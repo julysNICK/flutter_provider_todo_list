@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
+import 'package:flutter_provider_todo_list/redux/actions_redux.dart';
 import 'package:flutter_provider_todo_list/scopedModel/scopedModel.dart';
 import 'package:flutter_provider_todo_list/scopedModel/todo_model.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class MyPopup extends StatelessWidget {
@@ -29,43 +31,55 @@ class MyPopup extends StatelessWidget {
       ScopedModel.of<TodoScoped>(contextHere).add(task);
     }
 
-    return AlertDialog(
-      title: const Text("Add Task"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Title",
+    addTaskRedux(contextHere) {
+      TaskModel task = TaskModel(
+        title: titleController.text,
+        detail: detailController.text,
+      );
+      // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
+      StoreProvider.of<List<TaskModel>>(contextHere)
+          .dispatch(AddTodoActions(task));
+    }
+
+    return StoreConnector<List<TaskModel>, List<TaskModel>>(
+      converter: (store) => store.state,
+      builder: (context, tasks) {
+        return AlertDialog(
+          title: const Text('Add Task'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    hintText: 'Title',
+                  ),
+                ),
+                TextField(
+                  controller: detailController,
+                  decoration: const InputDecoration(
+                    hintText: 'Detail',
+                  ),
+                ),
+              ],
             ),
-            controller: titleController,
           ),
-          const SizedBox(height: 10),
-          TextField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Detail",
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () {
+                addTaskRedux(context);
+              },
             ),
-            controller: detailController,
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text("Cancel"),
-        ),
-        TextButton(
-          onPressed: () {
-            addTaskScoped(context);
-            // Navigator.pop(context);
-          },
-          child: const Text("Add"),
-        ),
-      ],
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
     );
   }
 }

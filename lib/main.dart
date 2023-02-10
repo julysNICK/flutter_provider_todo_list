@@ -49,13 +49,6 @@ class MyHomePage extends StatelessWidget {
     TextEditingController detailController = TextEditingController();
     String selectedTime =
         "$selectedHour:${selectedMinute >= 10 ? selectedMinute : "0$selectedMinute"} ${selectedHour >= 12 ? "PM" : "AM"} ";
-    addTask(contextHere) {
-      TaskModel task = TaskModel(
-        title: titleController.text,
-        detail: detailController.text,
-      );
-      BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
-    }
 
     return Scaffold(
       backgroundColor: Colors.lightBlue[900],
@@ -130,16 +123,22 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
+      floatingActionButton: StoreConnector<List<TaskModel>, List<TaskModel>>(
+        converter: (store) => store.state,
+        builder: (context, todo) {
+          return FloatingActionButton(
+            onPressed: () {
+              showDialog(
                 context: context,
-                builder: (BuildContext context) {
+                builder: (context) {
                   return const MyPopup();
-                });
-            // Provider.of<TodoModel>(context, listen: false).addTaskInitList();
-          },
-          child: const Icon(Icons.add)),
+                },
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        },
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
