@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_provider_todo_list/mobx/task_store_redux.dart';
 import 'package:flutter_provider_todo_list/provider/task_model.dart';
 import 'package:flutter_provider_todo_list/redux/actions_redux.dart';
 import 'package:flutter_provider_todo_list/scopedModel/scopedModel.dart';
 import 'package:flutter_provider_todo_list/scopedModel/todo_model.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:scoped_model/scoped_model.dart';
 
-class MyPopup extends StatelessWidget {
-  const MyPopup({super.key});
+import '../riverpod/storage_provider.dart';
+
+class MyPopup extends ConsumerWidget {
+  const MyPopup({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController titleController = TextEditingController();
     TextEditingController detailController = TextEditingController();
 
@@ -30,7 +32,7 @@ class MyPopup extends StatelessWidget {
         detail: detailController.text,
       );
       // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
-      Provider.of<TaskStoreMobx>(context, listen: false).addTask(task);
+      // Provider.of<TaskStoreMobx>(context, listen: false).addTask(task);
     }
 
     addTaskScoped(contextHere) {
@@ -40,6 +42,14 @@ class MyPopup extends StatelessWidget {
       );
       // BlocProvider.of<TaskBloc>(contextHere).add(AddTodoEvent(task));
       ScopedModel.of<TodoScoped>(contextHere).add(task);
+    }
+
+    addTaskRiverPod(contextHere) {
+      TaskModel task = TaskModel(
+        title: titleController.text,
+        detail: detailController.text,
+      );
+      ref.read(todoListProviderRiverPod.notifier).addTodo(task);
     }
 
     addTaskRedux(contextHere) {
@@ -76,7 +86,7 @@ class MyPopup extends StatelessWidget {
         TextButton(
           child: const Text('Add'),
           onPressed: () {
-            addTaskMobx(context);
+            addTaskRiverPod(context);
           },
         ),
         TextButton(
